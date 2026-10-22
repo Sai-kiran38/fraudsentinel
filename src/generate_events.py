@@ -64,6 +64,7 @@ def main():
             t = random_time(start, end)
             d = make_device(cid, t, 9)
             devices.append(d)
+            logins.append(login(cid, d["device_id"], t, c.city, c.state))   # first use on day 1
             logins += routine_logins(cid, d["device_id"], t, end, c.city, c.state)
             scenarios.append((cid, "legit_new_device", t))
 
@@ -81,7 +82,7 @@ def main():
                             "old_value": f"{c.city}, {c.state}", "new_value": f"{city}, {state}"})
             scenarios.append((cid, "legit_address_change", t))
 
-        if rng.random() < 0.10:                                  # typo
+        for _ in range(rng.poisson(12)):                         # typos: everyone mistypes sometimes
             logins.append(login(cid, home_dev, random_time(start, end), c.city, c.state, success=0))
 
         # 3. FRAUD STORIES
